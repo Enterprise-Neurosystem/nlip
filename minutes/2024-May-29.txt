@@ -1,0 +1,23 @@
+Meeting Minutes of the call on 2024 May 29th. 
+Participants: 
+  U. Buffalo (Jinjun Xiong) 
+  U. Delaware (Chien-Chung Shen, Mathews Maurielo)
+  U. Michigan (Sugih Jamin)  
+  Purdue University (Elisa Bertino) 
+  SRI – (Yan-Ming Chiou)
+  IBM (Dinesh Verma, Peter Santhnam) 
+
+Discussions: 
+   Logistics: Meeting to happen on Thursdays at 9AM Eastern-10 AM Eastern till end of August (thenn TBD depending on teaching schedule) 
+   Technical: 
+          - Elisa proposed adding concept of digital identity management as part of protocol. She will add the vision paper for the same. 
+          - Sugih proposed focusing initially on REST/JSON based interaction. Accepted as the initial step by all. 
+          - There was discussion on the mediator section, and a discussion on the various interactions within scope and out of scope. 
+          - The agreement was to have in-scope interactions between genAI based services, but keep interaction between genAI services and existing services as out of scope. 
+             This section ought to be added in the vision paper. 
+          - There was discussion on the various tokens differences in various models, and if a common token structure was needed. 
+             For the initial phase, the goal was to try to keep as much flexibility and model independence, and see where that leads to. 
+          - There was discussion around adding an initial specification section in the documentation. 
+  
+Some of the figures are in the deck 2024-May-28.pptx
+
