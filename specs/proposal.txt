@@ -1,0 +1,87 @@
+Proposed Initial Protocol 
+
+The proposed initial protocol is based on the abstraction of a communication channel. 
+A communication channel provides a means of exchanging messages between a client and a server. 
+The channel can then be bound to a specific details of an underlying protocol. 
+
+Each server implementing the common chat protocol support communication on two channels. 
+The first is the control channel, and the other is the data channel. 
+On both channels, messages exchanged between the client and the server consist of JSON formatted messages.
+The control channel accepts inbound requests from any client without requiring authentication or authorization, 
+but the data channel may only accept requests from clients that include specific authentication/authorization information. 
+
+All JSON messages exchanged on the channels include a list of subchannels which include: 
+format: which can take one of the values of 'text', 'image', 'vide', 'location', etc. 
+subformat: which can be any piece of text 
+content: which is a content specified according to the format 
+
+All clients and servers implementing the protocol must support a format of 'text' and a subformat of 'English'.
+They may optionally support other sub-format supporting other languages. 
+All languages will be identified by the language type. 
+
+A typical interaction may start by the client sending the following message on the control channel of server: 
+
+{
+"subchannel": { "format":"text", "subformat":"english", "content":"I need data channel information."}
+} 
+
+The server may response by sending the following message :
+{
+"subchannel": { "format":"text", "subformat":"english", "content":"Please authenticate yourself."}
+} 
+
+The client would respond by sending the following message: 
+{
+"subchannel": { "format":"text", "subformat":"english", "content":"My userid is foobar. My API-Key is 0x05060789."}
+} 
+
+The server would response by sending the following message :
+{
+"subchannel": { "format":"text", "subformat":"english", "content":"Data Channel is /data. Use Authentication token '0x0567564' for connection in field authentication-token. Authentication-token field must be specified. Only last 5 exchanges will be remembered by teh server. You need to remember and provide all exchanges older than the last 5."}
+} 
+
+If the API-Key is not valid, the server would respond as: 
+
+{
+"subchannel": { "format":"text", "subformat":"english", "content":"Invalid API-Key. Please provide a valid API-Key."}
+} 
+
+The server could also have optionally responded with the last message without requiring the client to give an API-Key.  
+
+After receiving the data channel information, the client may also send the following requests on the data channel: 
+{
+"subchannel": { "format":"text", "subformat":"english", "content":"I need to check my account."}
+"subchannel": { "format":"Binary", "subformat":"Authentication-Token", "content":"0x0567564"}
+} 
+
+The client on a control channel may send requests such as 
+{
+"subchannel": { "format":"text", "subformat":"english", "content":"I need to know your privacy policy."}
+"subchannel": { "format":"binary", "subformat":"Authentication-Token", "content":"0x0567564"}
+} 
+
+The server can respond with the details of the privacy policy. 
+
+Control channel is intended to be used for exchanges that deal with configuration, security, privacy and policy exchanges. 
+Data channel is intended to be used for the business/application flow of information. In case the client sends a control channel message on the data channel or vice-versa, the server may send a respond asking the client to send it to the other channel. 
+
+===
+Supported subchannels:
+The following subchannels ought to be supported by all clients and servers. 
+
+Text sub-channel: where the format says text and subformat specifies the language 
+structured sub-channel: where the format says structured and subformat is one of 'json', 'uri', 'xml' . The content is a message specified in the specified subformat.  
+image sub-channel: where the format says image and subformat is the encoding of image (.png, ,jpg, .tiff etc.) 
+binary sub-channel: where the format says 'binary' and subformat is the purpose of the binary data. The content is a hex-encoded representation of the binary data. 
+location sub-channel: where the format says 'location' and subformat can be one of 'text', or 'GPS',}. The content is a description of the location in text, or the GPS coordinates. 
+
+
+====
+
+Binding of the Protocol to REST Services 
+
+The binding of a control channel to a service using a REST Protocol running on a host h at port p would be https://h:p/chat_control
+The binding of the data channel to a service using a REST Protocol running on a host h at port p would be https://h:p/chat_data 
+In this binding the message exchanged on both channels is provided using a POST command. 
+
+BINDING of the protocol to other Services 
