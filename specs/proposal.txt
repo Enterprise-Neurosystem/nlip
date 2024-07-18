@@ -11,9 +11,12 @@ The control channel accepts inbound requests from any client without requiring a
 but the data channel may only accept requests from clients that include specific authentication/authorization information. 
 
 All JSON messages exchanged on the channels include a list of subchannels which include: 
-format: which can take one of the values of 'text', 'image', 'vide', 'location', etc. 
+format: which can take one of the values of 'text', 'image', 'video', 'location', 'audio', etc. 
 subformat: which can be any piece of text 
 content: which is a content specified according to the format 
+
+## Discuss -- whether or not time ought to be included here. 
+## Session Control -- should be done at a higher level function
 
 All clients and servers implementing the protocol must support a format of 'text' and a subformat of 'English'.
 They may optionally support other sub-format supporting other languages. 
@@ -67,13 +70,17 @@ Data channel is intended to be used for the business/application flow of informa
 
 ===
 Supported subchannels:
-The following subchannels ought to be supported by all clients and servers. 
+The following subchannels are defined for supported by all clients and servers. 
 
 Text sub-channel: where the format says text and subformat specifies the language 
 structured sub-channel: where the format says structured and subformat is one of 'json', 'uri', 'xml' . The content is a message specified in the specified subformat.  
-image sub-channel: where the format says image and subformat is the encoding of image (.png, ,jpg, .tiff etc.) 
+image sub-channel: where the format says image and subformat is the encoding of image (.png, ,jpg, .tiff etc.)
+json sub-channel: where the format says json, the subformat is blank, and the content includes a json formatted message. 
 binary sub-channel: where the format says 'binary' and subformat is the purpose of the binary data. The content is a hex-encoded representation of the binary data. 
 location sub-channel: where the format says 'location' and subformat can be one of 'text', or 'GPS',}. The content is a description of the location in text, or the GPS coordinates. 
+audio sub-channel: where the format says 'audio' and subformat identifies the encoding (.mp4 etc). The content is the audio encoded as per the subformat. 
+sensor sub-channel: where the format says 'sensor' and subformat identifies the type and encoding of sensors data. The content is the sensor data encode. 
+generic sub-channel: where the format says generic, and the subformat can content can be any generic entries which the client and server can mutually understand. 
 
 
 ====
@@ -85,3 +92,26 @@ The binding of the data channel to a service using a REST Protocol running on a 
 In this binding the message exchanged on both channels is provided using a POST command. 
 
 BINDING of the protocol to other Services 
+
+======
+Implementation Recommendations 
+
+Assumption here is that the client and server are recording time or maintaining interaction logs independently. 
+If they need to exchange policy information about the recording, they should do it on the control channel. 
+
+There may be higher level session management exchanges -- e.g. whether to allow past recorded conversation to a new person joining the session. 
+
+========
+Clients that do not have capability to have NLP processing 
+
+Such clients must initiate the conversation on the control channel with the message "I only accept json" , and list the parameters it can support e.g. 
+{
+"subchannel": { "format":"text", "subformat":"english", "content":"I need data channel information. I only accept json. Parameters I can process are param_value_1, param_value_2,..."}
+} 
+
+In these cases, the responses to the client must be sent using the json sub-channel. All configuration json must have the format. 
+{ "param_name_1": "value_1", "param_name_1": "value_1", "param_name_1": "value_1" } where parameter names are values are for the client. 
+
+========
+Comments: 
+Client should be able to specify bindings to get updates, e.g. have a websocket to get back stock quotes or have some information sent to an address via email when the task is over. 
