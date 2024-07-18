@@ -70,12 +70,12 @@ Data channel is intended to be used for the business/application flow of informa
 
 ===
 Supported subchannels:
-The following subchannels are defined for supported by all clients and servers. 
+The following subchannels are defined. All client and servers must support the text and structured sub-channels.
+Support of other sub-channels is optional. 
 
 Text sub-channel: where the format says text and subformat specifies the language 
 structured sub-channel: where the format says structured and subformat is one of 'json', 'uri', 'xml' . The content is a message specified in the specified subformat.  
 image sub-channel: where the format says image and subformat is the encoding of image (.png, ,jpg, .tiff etc.)
-json sub-channel: where the format says json, the subformat is blank, and the content includes a json formatted message. 
 binary sub-channel: where the format says 'binary' and subformat is the purpose of the binary data. The content is a hex-encoded representation of the binary data. 
 location sub-channel: where the format says 'location' and subformat can be one of 'text', or 'GPS',}. The content is a description of the location in text, or the GPS coordinates. 
 audio sub-channel: where the format says 'audio' and subformat identifies the encoding (.mp4 etc). The content is the audio encoded as per the subformat. 
@@ -109,8 +109,8 @@ Such clients must initiate the conversation on the control channel with the mess
 "subchannel": { "format":"text", "subformat":"english", "content":"I need data channel information. I only accept json. Parameters I can process are param_value_1, param_value_2,..."}
 } 
 
-In these cases, the responses to the client must be sent using the json sub-channel. All configuration json must have the format. 
-{ "param_name_1": "value_1", "param_name_1": "value_1", "param_name_1": "value_1" } where parameter names are values are for the client. 
+In these cases, the responses to the client must be sent using the structured sub-channel with json format. All configuration json must have the format. 
+{ "param_name_1": "value_1", "param_name_1": "value_1", "param_name_1": "value_1" } where parameter names are those acceptable by the client. 
 
 ========
 Comments: 
